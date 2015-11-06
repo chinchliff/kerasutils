@@ -167,8 +167,8 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
         model_file = output_dir + 'epoch{cur}.weights'.format(cur=cur)
         model.save_weights(model_file)
 
-def train_regression_model(model, X, y, run_label, dataset, \
-                           num_epochs, train_scoring_proportion):
+def train_regression_model(model, X, y, run_label, dataset, num_epochs, \
+                           train_scoring_proportion, resume_previous=None):
 
     n_epochs_completed = 0
     if resume_previous is None:
@@ -188,7 +188,7 @@ def train_regression_model(model, X, y, run_label, dataset, \
                               'number that have already been completed ({}).') \
                              .format(num_epochs, n_epochs_completed))
 
-    write_model_description(model, file, output_dir + '_model.description.txt')
+    write_model_description(model, dataset, output_dir + '_model.description.txt')
 
     (X_train, y_train), (X_test, y_test) = train_test_split(X, y)
     num_outputs = y_test.values()[0][0].shape[0]
