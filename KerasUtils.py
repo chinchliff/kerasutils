@@ -76,7 +76,7 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
     for j in range(num_epochs):
         cur = j + n_epochs_completed
 
-        print('epoch {d}'.format(cur))
+        print('epoch {}'.format(cur))
 
         i = 1
         for k, batch in X_train.items():
@@ -135,7 +135,7 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
         # also predict and score (some of the) training data
         error_train = 0
         n_train_seqs = 0
-        X_train_subsample = random.sample(X_train.keys(), int(len(X_train) * train_scoring_proportion))
+        X_train_subsample = random.sample(X_train.keys(), int(len(X_train) * train_scoring_proportion) + 1)
         for i, k in enumerate(X_train_subsample):
             batch_X = X_train[k]
             batch_y = y_train[k]
