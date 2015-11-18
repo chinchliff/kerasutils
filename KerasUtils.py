@@ -141,9 +141,9 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
             batch_y = y_train[k]
             n_k = len(batch_X)
             n_train_seqs += n_k
-            print('predicting inputs for {n} training seqs of length {k}. ' +
-                  'batch {i}, {m} remaining' \
-                .format(n=n_k, k=k, i=i+1, m=len(X_test) - i - 1))
+            print(('predicting inputs for {n} training seqs of length {k}. ' +
+                  'batch {i}, {m} remaining') \
+                  .format(n=n_k, k=k, i=i+1, m=len(X_test) - i - 1))
 
             for l in range(n_k):
                 X_l = np.array([batch_X[l],])
