@@ -56,9 +56,9 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
         output_dir = resume_previous.rstrip('/') + '/'
         # use the weight file with the highest epoch number as the starting point
         
-        print(sorted([int(t[5:-8]) for t in os.listdir(output_dir) if t[-7:] == 'weights']))
+#        print(sorted([int(t[5:-8]) for t in os.listdir(output_dir) if t[-7:] == 'weights']))
         
-        last_epoch_completed = sorted([int(t[5:-8]) for t in os.listdir(output_dir) if t[-7:] == 'weights'])[-1]
+#        last_epoch_completed = sorted([int(t[5:-8]) for t in os.listdir(output_dir) if t[-7:] == 'weights'])[-1]
 
         print(last_epoch_completed)
         model.load_weights(output_dir + 'epoch' + str(last_epoch_completed) + '.weights')
@@ -68,7 +68,7 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
                              .format(num_epochs, last_epoch_completed))
         start_epoch = last_epoch_completed + 1
 
-    print(start_epoch)
+#    print(start_epoch)
     write_model_description(model, dataset, output_dir + '_model.description.txt')
 
     (X_train, y_train), (X_test, y_test) = train_test_split(X, y)
