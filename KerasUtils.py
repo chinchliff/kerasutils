@@ -45,7 +45,7 @@ def write_model_description(model, dataset, filename):
 def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
                                train_scoring_proportion, resume_previous=None):
 
-    last_epoch_completed = 0
+    start_epoch = 0
     if resume_previous is None:
         output_dir = 'results_{l}_{t}/'.format(l=run_label, t=int(time.time()))
         os.mkdir(output_dir)
@@ -56,11 +56,12 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
         output_dir = resume_previous.rstrip('/') + '/'
         # use the weight file with the highest epoch number as the starting point
         last_epoch_completed = sorted([int(t[5:-8]) for t in os.listdir(output_dir) if t[-7:] == 'weights'])[-1]
-        model.load_weights(output_dir + str(last_saved_weights))
+        model.load_weights(output_dir + str(last_epoch_completed))
         if num_epochs <= last_epoch_completed:
             raise ValueError(('The number of epochs ({}) must be greater than the' +
                               'number that have already been completed ({}).') \
                              .format(num_epochs, last_epoch_completed))
+        start_epoch = last_epoch_completed + 1
 
     write_model_description(model, dataset, output_dir + '_model.description.txt')
 
@@ -72,7 +73,7 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
         with open(score_file_path, 'w') as score_file:
             score_file.write('epoch,train_err_abs,test_err_abs,train_err_mean,test_err_mean\n')
 
-    for j in range(num_epochs):
+    for j in range(start_epoch, num_epochs):
         cur = j + last_epoch_completed
 
         print('epoch {}'.format(cur))
@@ -169,7 +170,7 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
 def train_regression_model(model, X, y, run_label, dataset, num_epochs, \
                            train_scoring_proportion, resume_previous=None):
 
-    last_epoch_completed = 0
+    start_epoch = 0
     if resume_previous is None:
         output_dir = 'results_{l}_{t}/'.format(l=run_label, t=int(time.time()))
         os.mkdir(output_dir)
@@ -180,11 +181,12 @@ def train_regression_model(model, X, y, run_label, dataset, num_epochs, \
         output_dir = resume_previous.rstrip('/') + '/'
         # use the weight file with the highest epoch number as the starting point
         last_epoch_completed = sorted([int(t[5:-8]) for t in os.listdir(output_dir) if t[-7:] == 'weights'])[-1]
-        model.load_weights(output_dir + str(last_saved_weights))
+        model.load_weights(output_dir + str(last_epoch_completed))
         if num_epochs <= last_epoch_completed:
             raise ValueError(('The number of epochs ({}) must be greater than the' +
                               'number that have already been completed ({}).') \
                              .format(num_epochs, last_epoch_completed))
+        start_epoch = last_epoch_completed + 1
 
     write_model_description(model, dataset, output_dir + '_model.description.txt')
 
