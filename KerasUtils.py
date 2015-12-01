@@ -79,9 +79,7 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
         with open(score_file_path, 'w') as score_file:
             score_file.write('epoch,train_err_abs,test_err_abs,train_err_mean,test_err_mean\n')
 
-    for j in range(start_epoch, num_epochs):
-        cur = j + last_epoch_completed
-
+    for cur in range(start_epoch, num_epochs):
         print('epoch {}'.format(cur))
 
         i = 1
@@ -207,8 +205,7 @@ def train_regression_model(model, X, y, run_label, dataset, num_epochs, \
         with open(score_file_path, 'w') as score_file:
             score_file.write('epoch,train_err_abs,test_err_abs,train_err_mean,test_err_mean\n')
 
-    for j in range(num_epochs):
-        cur = j + last_epoch_completed
+    for cur in range(num_epochs):
         print('epoch %d' % cur)
 
         i = 1
