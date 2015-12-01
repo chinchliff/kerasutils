@@ -58,9 +58,9 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
         
 #        print(sorted([int(t[5:-8]) for t in os.listdir(output_dir) if t[-7:] == 'weights']))
         
-#        last_epoch_completed = sorted([int(t[5:-8]) for t in os.listdir(output_dir) if t[-7:] == 'weights'])[-1]
+        last_epoch_completed = sorted([int(t[5:-8]) for t in os.listdir(output_dir) if t[-7:] == 'weights'])[-1]
 
-        print(last_epoch_completed)
+#        print(last_epoch_completed)
         model.load_weights(output_dir + 'epoch' + str(last_epoch_completed) + '.weights')
         if num_epochs <= last_epoch_completed:
             raise ValueError(('The number of epochs ({}) must be greater than the' +
