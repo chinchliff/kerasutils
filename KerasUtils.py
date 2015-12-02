@@ -42,8 +42,16 @@ def write_model_description(model, dataset, filename):
                 outfile.write('    {k} = {v}\n'.format(k=k, v=str(l[k])))
         outfile.flush()
 
+def push_to_s3_bucket(dirname):
+
+    subprocess.call('tar -czf {target}.tgz {target}' \
+        .format(target=output_dir), shell=True)
+    subprocess.call('aws s3 cp {target}.tgz {s3_location}' \
+        .format(target=output_dir, s3_location=s3_location), shell=True)
+
 def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
-                               train_scoring_proportion, resume_previous=None):
+                               train_scoring_proportion, resume_previous=None,
+                               s3_location='s3://'):
 
     start_epoch = 0
     if resume_previous is None:
@@ -55,12 +63,7 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
                           .format(resume_previous))
         output_dir = resume_previous.rstrip('/') + '/'
         # use the weight file with the highest epoch number as the starting point
-        
-#        print(sorted([int(t[5:-8]) for t in os.listdir(output_dir) if t[-7:] == 'weights']))
-        
         last_epoch_completed = sorted([int(t[5:-8]) for t in os.listdir(output_dir) if t[-7:] == 'weights'])[-1]
-
-#        print(last_epoch_completed)
         model.load_weights(output_dir + 'epoch' + str(last_epoch_completed) + '.weights')
         if num_epochs <= last_epoch_completed:
             raise ValueError(('The number of epochs ({}) must be greater than the' +
@@ -68,7 +71,6 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
                              .format(num_epochs, last_epoch_completed))
         start_epoch = last_epoch_completed + 1
 
-#    print(start_epoch)
     write_model_description(model, dataset, output_dir + '_model.description.txt')
 
     (X_train, y_train), (X_test, y_test) = train_test_split(X, y)
@@ -170,9 +172,12 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
         # record the weights found this epoch
         model_file = output_dir + 'epoch{cur}.weights'.format(cur=cur)
         model.save_weights(model_file)
+        
+        push_to_s3_bucket(output_dir)
 
 def train_regression_model(model, X, y, run_label, dataset, num_epochs, \
-                           train_scoring_proportion, resume_previous=None):
+                           train_scoring_proportion, resume_previous=None, \
+                           s3_location='s3://'):
 
     start_epoch = 0
     if resume_previous is None:
@@ -277,3 +282,5 @@ def train_regression_model(model, X, y, run_label, dataset, num_epochs, \
         # record the weights found this epoch
         model_file = output_dir + 'epoch{cur}.weights'.format(cur=cur)
         model.save_weights(model_file)
+
+        push_to_s3_bucket(output_dir)
