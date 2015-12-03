@@ -44,8 +44,12 @@ def write_model_description(model, dataset, filename):
 
 def push_to_s3_bucket(target, s3_location):
 
-    subprocess.call('tar -czf {target}.tgz {target}' \
-        .format(target=target), shell=True)
+    target = target.rstrip('/')
+    if os.path.exists(target + '.tgz'):
+        os.remove(target + '.tgz')
+    tar_cmd = 'tar -czf {target}.tgz {target}'.format(target=target)
+    print(tar_cmd)
+    subprocess.call(tar_cmd, shell=True)
     subprocess.call('aws s3 cp {target}.tgz {s3_location}' \
         .format(target=target, s3_location=s3_location), shell=True)
 
