@@ -151,8 +151,7 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
             batch_y = y_train[k]
             n_k = len(batch_X)
             n_train_seqs += n_k
-            print(('predicting inputs for {n} training seqs of length {k}. ' +
-                  'batch {i}, {m} remaining') \
+            print('predicting inputs for {n} training seqs of length {k}. batch {i}, {m} remaining' \
                   .format(n=n_k, k=k, i=i+1, m=len(X_test) - i - 1))
 
             for l in range(n_k):
@@ -233,7 +232,7 @@ def train_regression_model(model, X, y, run_label, dataset, num_epochs, \
                                          [p + '_predicted' for p in par_labels]) for x in t]
             outfile.write(','.join(col_labels) + ',loss,size\n')
 
-            for k in y_test:
+            for i, k in enumerate(y_test):
                 batch_X = X_test[k]
                 batch_y = y_test[k]
                 p = model.predict(np.array(batch_X))
