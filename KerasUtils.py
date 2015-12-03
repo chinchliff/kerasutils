@@ -42,12 +42,12 @@ def write_model_description(model, dataset, filename):
                 outfile.write('    {k} = {v}\n'.format(k=k, v=str(l[k])))
         outfile.flush()
 
-def push_to_s3_bucket(dirname):
+def push_to_s3_bucket(target, s3_location):
 
     subprocess.call('tar -czf {target}.tgz {target}' \
-        .format(target=output_dir), shell=True)
+        .format(target=target), shell=True)
     subprocess.call('aws s3 cp {target}.tgz {s3_location}' \
-        .format(target=output_dir, s3_location=s3_location), shell=True)
+        .format(target=target, s3_location=s3_location), shell=True)
 
 def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
                                train_scoring_proportion, resume_previous=None,
@@ -173,7 +173,7 @@ def train_classification_model(model, X, y, run_label, dataset, num_epochs, \
         model_file = output_dir + 'epoch{cur}.weights'.format(cur=cur)
         model.save_weights(model_file)
         
-        push_to_s3_bucket(output_dir)
+        push_to_s3_bucket(output_dir, s3_location)
 
 def train_regression_model(model, X, y, run_label, dataset, num_epochs, \
                            train_scoring_proportion, resume_previous=None, \
@@ -283,4 +283,4 @@ def train_regression_model(model, X, y, run_label, dataset, num_epochs, \
         model_file = output_dir + 'epoch{cur}.weights'.format(cur=cur)
         model.save_weights(model_file)
 
-        push_to_s3_bucket(output_dir)
+        push_to_s3_bucket(output_dir, s3_location)
