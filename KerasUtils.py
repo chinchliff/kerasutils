@@ -1,5 +1,5 @@
 import numpy as np
-import random, os, time
+import random, os, subprocess, time
 
 def train_test_split(X, y, test_size=0.3):
     '''Group test seqs into batches by length and create test/train sets.'''
